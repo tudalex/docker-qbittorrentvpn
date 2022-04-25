@@ -126,6 +126,7 @@ RUN apt update \
 RUN apt update \
     && apt upgrade -y \
     && apt install -y --no-install-recommends \
+    binutils \
     build-essential \
     ca-certificates \
     curl \
@@ -211,6 +212,9 @@ RUN echo "deb http://deb.debian.org/debian/ bullseye non-free" > /etc/apt/source
 
 # Remove src_valid_mark from wg-quick
 RUN sed -i /net\.ipv4\.conf\.all\.src_valid_mark/d `which wg-quick`
+
+# Strip qt lib for compatibility with kernels prior to 3.15
+RUN strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 VOLUME /config /downloads
 
